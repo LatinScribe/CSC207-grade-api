@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class MongoGradeDB implements GradeDB {
-    private static final String API_URL = "https://grade-logging-api.chenpan.ca/api/grade";
+    private static final String API_URL = "https://henrytchen.com/custom-api/grade";
     // load API_TOKEN from env variable.
-    private static final String API_TOKEN = System.getenv("API_TOKEN");
+    private static final String API_TOKEN = "EXAMPLE_TOKEN";
 
     public static String getApiToken() {
         return API_TOKEN;
@@ -24,7 +24,7 @@ public class MongoGradeDB implements GradeDB {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         Request request = new Request.Builder()
-                .url(String.format("https://grade-logging-api.chenpan.ca/grade?course=%s&utorid=%s", course, utorid))
+                .url(String.format("https://henrytchen.com/custom-api/grade?course=%s&utorid=%s", course, utorid))
                 .addHeader("Authorization", API_TOKEN)
                 .addHeader("Content-Type", "application/json")
                 .build();
@@ -56,11 +56,12 @@ public class MongoGradeDB implements GradeDB {
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject requestBody = new JSONObject();
+        requestBody.put("utorid", "BILLYBOYB");
         requestBody.put("course", course);
         requestBody.put("grade", grade);
         RequestBody body = RequestBody.create(mediaType, requestBody.toString());
         Request request = new Request.Builder()
-                .url("https://grade-logging-api.chenpan.ca/grade")
+                .url("https://henrytchen.com/custom-api/grade")
                 .method("POST", body)
                 .addHeader("Authorization", API_TOKEN)
                 .addHeader("Content-Type", "application/json")
@@ -91,7 +92,7 @@ public class MongoGradeDB implements GradeDB {
         requestBody.put("name", name);
         RequestBody body = RequestBody.create(mediaType, requestBody.toString());
         Request request = new Request.Builder()
-                .url("https://grade-logging-api.chenpan.ca/team")
+                .url("https://henrytchen.com/custom-api/team")
                 .method("POST", body)
                 .addHeader("Authorization", API_TOKEN)
                 .addHeader("Content-Type", "application/json")
@@ -163,7 +164,7 @@ public class MongoGradeDB implements GradeDB {
         JSONObject requestBody = new JSONObject();
         RequestBody body = RequestBody.create(mediaType, requestBody.toString());
         Request request = new Request.Builder()
-                .url("https://grade-logging-api.chenpan.ca/leaveTeam")
+                .url("https://henrytchen.com/custom-api/leaveTeam")
                 .method("PUT", body)
                 .addHeader("Authorization", API_TOKEN)
                 .addHeader("Content-Type", "application/json")
@@ -191,5 +192,12 @@ public class MongoGradeDB implements GradeDB {
     //             methods to help you write this code (copy-and-paste + edit as needed).
     public Team getMyTeam() {
         return null;
+    }
+
+    public static void main(String[] args) {
+        MongoGradeDB db = new MongoGradeDB();
+//        db.logGrade("TESTCOUrSE", 207);
+        Grade grade = db.getGrade("HENRY", "CSC");
+        System.out.println(grade);
     }
 }
